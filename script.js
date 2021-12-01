@@ -88,3 +88,15 @@ function Gameboard(){
         }
     };
 }
+// la computer makes a choice
+function computerChoice(){
+    let finalChoice;
+    let choicesPoss = []
+    for(let i = 0; i < 100; i++){
+        choicesPoss.push(i);
+    }
+    let num1to100 = Math.floor(Math.random()*choicesPoss.length)
+    choicesPoss.splice(num1to100,1);
+    finalChoice = num1to100
+    return finalChoice
+}
