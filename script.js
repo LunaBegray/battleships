@@ -33,16 +33,51 @@ function Ship (length, hitYN, sunkYN, positions, positionsYN){
         return false
     }
 }
+//creates the board
 function Gameboard(){
-    let gameboard = []
-    for(let i = 0; i < 100; i++){
-        gameboard.push(0);
-    }
+    //places ship in cords specified when calling the function, it does not prevent the ship from begin places on another ship.
+    let shipArr = [];
+    let missedShotsCord = [];
     this.placeShip = (cords) => {
-        
+        let cordsYN = []
+        for(let i = 0; i < cords.length; i++){
+            cordsYN.push(0);
+        }
+        let newShip = new Ship (cords.length, false, false, cords, cordsYN)
+        shipArr.push(newShip);
     }
-    
-    this.receiveAttack = () => {
 
+    this.receiveAttack = (cordsPair) => {
+        let beforeHitShips = []
+        let ifAllShipSunkTrue = false;
+        for(let i = 0; i < shipArr.length; i++){
+            if(shipArr[i].hitYN){
+                beforeHitShips.push(1)
+            }
+        }
+        for(let i = 0; i < shipArr.length; i++){
+            if(shipArr[i].positions == cordsPair){
+                shipArr[i].hit(cordsPair);
+            }
+        } 
+        let afterHitShips = []
+        for(let i = 0; i < shipArr.length; i++){
+            if(shipArr[i].hitYN){
+                afterHitShips.push(1)
+            }
+        }
+        if(beforeHitShips == afterHitShips){
+            missedShotsCord.push(cordsPair)
+        }
+        let allSunkShips = []
+        for(let i = 0; i < shipArr.length; i++){
+            if(shipArr[i].isSunk){
+                allSunkShips.push(shipArr[i]);
+            }
+        }
+        if(allSunkShips == shipArr){
+            ifAllShipSunkTrue = true;
+        }
     };
+
 }
