@@ -37,6 +37,7 @@ function Ship (length, hitYN, sunkYN, positions, positionsYN){
 function Gameboard(){
     //places ship in cords specified when calling the function, it does not prevent the ship from begin places on another ship.
     let shipArr = [];
+    let ifAllShipSunkTrue = false;
     let missedShotsCord = [];
     this.placeShip = (cords) => {
         let cordsYN = []
@@ -46,10 +47,11 @@ function Gameboard(){
         let newShip = new Ship (cords.length, false, false, cords, cordsYN)
         shipArr.push(newShip);
     }
-
+    //takes a pair of cords and detemines if it hits a ships, if yes it will mark it as hit. it will find the array of before the hit check and after it and then 
+    //compare them, if they are equal it will add them to the array of missed shots. 
+    //it also checks if all the ships has sunk, if they do it will make the var ifAllShipSunkTrue = true; 
     this.receiveAttack = (cordsPair) => {
         let beforeHitShips = []
-        let ifAllShipSunkTrue = false;
         for(let i = 0; i < shipArr.length; i++){
             if(shipArr[i].hitYN){
                 beforeHitShips.push(1)
@@ -79,5 +81,4 @@ function Gameboard(){
             ifAllShipSunkTrue = true;
         }
     };
-
 }
