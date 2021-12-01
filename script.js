@@ -51,32 +51,38 @@ function Gameboard(){
     //compare them, if they are equal it will add them to the array of missed shots. 
     //it also checks if all the ships has sunk, if they do it will make the var ifAllShipSunkTrue = true; 
     this.receiveAttack = (cordsPair) => {
+        //takes ship before the hit check into array
         let beforeHitShips = []
         for(let i = 0; i < shipArr.length; i++){
             if(shipArr[i].hitYN){
                 beforeHitShips.push(1)
             }
         }
+        //hit check, if it does hit then call the hit function of the ship that has been hit.
         for(let i = 0; i < shipArr.length; i++){
             if(shipArr[i].positions == cordsPair){
                 shipArr[i].hit(cordsPair);
             }
         } 
+        //take ship after the hit check into array
         let afterHitShips = []
         for(let i = 0; i < shipArr.length; i++){
             if(shipArr[i].hitYN){
                 afterHitShips.push(1)
             }
         }
+        //if hit ship array is the same before and after check it will deteramine that the shot was missed and add it to the missed shots array
         if(beforeHitShips == afterHitShips){
             missedShotsCord.push(cordsPair)
         }
+        //loops through all the ships and checks if they have been sunk, if they do, push them to the sunk ships array.
         let allSunkShips = []
         for(let i = 0; i < shipArr.length; i++){
             if(shipArr[i].isSunk){
                 allSunkShips.push(shipArr[i]);
             }
         }
+        //if all the ships that exist are sunk then the ifAllShipSUnkTrue varaible is true.
         if(allSunkShips == shipArr){
             ifAllShipSunkTrue = true;
         }
