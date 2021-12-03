@@ -36,3 +36,8 @@ body{
 .ship{
     background-color: aqua;
 }
+.hit{
+    width:4px;
+    height:4px;
+    border-radius: 50%;
+}
