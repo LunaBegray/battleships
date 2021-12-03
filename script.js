@@ -49,7 +49,10 @@ function Gameboard(){
         console.log(newShip);
         shipArr.push(newShip);
         for(let i = 0; i < cords.length; i++){
-
+            let whichSq = parseInt(newShip.positions[0], 10);
+            let whichSqI = parseInt(whichSq + i);
+            let sq = document.querySelector('#playerSq' + whichSqI);
+            sq.classList.add('ship');
         } 
     }
     //takes a pair of cords and detemines if it hits a ships, if yes it will mark it as hit. it will find the array of before the hit check and after it and then 
