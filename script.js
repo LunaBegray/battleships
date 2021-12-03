@@ -34,7 +34,6 @@ function Ship (length, hitYN, sunkYN, positions, positionsYN){
     }
 }
 //creates the board
-
 function Gameboard(){
     //places ship in cords specified when calling the function, it does not prevent the ship from begin places on another ship.
     let shipArr = [];
@@ -47,7 +46,11 @@ function Gameboard(){
             cordsYN.push(0);
         }
         let newShip = new Ship (cords.length, false, false, cords, cordsYN)
+        console.log(newShip);
         shipArr.push(newShip);
+        for(let i = 0; i < cords.length; i++){
+
+        } 
     }
     //takes a pair of cords and detemines if it hits a ships, if yes it will mark it as hit. it will find the array of before the hit check and after it and then 
     //compare them, if they are equal it will add them to the array of missed shots. 
@@ -129,19 +132,19 @@ Turns = () => {
 const playerCon = document.querySelector('.playerContainer');
 const computerCon = document.querySelector('.computerContainer');
 function createBoardPaC(){
-    const playerBoard = document.createElement('div');
-    const computerBoard = document.createElement('div');
+    let playerBoard = document.createElement('div');
+    let computerBoard = document.createElement('div');
     playerBoard.classList.add("playerBoard");
     computerBoard.classList.add("computerBoard");
     for(let i = 0; i < 100; i++){
         let newSqP = document.createElement('div');
         newSqP.classList.add('playerSq');
-        const idForSqP = "playerSq" + i;
+        let idForSqP = "playerSq" + i;
         newSqP.id = idForSqP;
         playerBoard.appendChild(newSqP);
         let newSqC = document.createElement('div');
         newSqC.classList.add("computerSq");
-        const idForSqC = "computerSq" + i;
+        let idForSqC = "computerSq" + i;
         newSqC.id = idForSqC;
         computerBoard.appendChild(newSqC);
     }
@@ -165,16 +168,44 @@ inputCordsBtn.addEventListener('click', () => {
         render();
     }
 });
+function checkGoUp(splitInput){
+    let startNum = parseInt(splitInput[0], 10);
+    for(let i = 0; i < splitInput.length; i++){
+        if(startNum != splitInput[i]){
+            return false
+        }
+        startNum += 1;
+    }
+    return true
+}
+function checkGoDown(splitInput){
+    let endNum = parseInt(splitInput[splitInput.length - 1], 10);
+    for(let i = 0; i < splitInput.length; i++){
+        if(endNum != splitInput[splitInput.length - 1 - i]){
+            return false
+        }
+        endNum += 1
+    }
+    return true
+}
 //btn input placeship shit
 const inputPlaceShip = document.querySelector('.placeShipInput');
 const inputPlaceBtn = document.querySelector('.placeShipBtn');
 let possibleShipsPlaceLength = [1,1,1,2,2,3];
 inputPlaceBtn.addEventListener('click', () => {
-    for(let i = 0; i < possibleShipsPlaceLength.length; i++){
-        if(gameboardPlayer.shipArr.length < 6 && inputPlaceShip.value.length == possibleShipsPlaceLength[i]){
-            gameboardPlayer.placeShip(inputPlaceShip.value);
-            inputPlaceShip.textContent = '';
-            render();
+    let splitInput = inputPlaceShip.value.split(' ');
+    if(checkGoUp(splitInput) || checkGoDown(splitInput)){
+        for(let i = 0; i < possibleShipsPlaceLength.length; i++){
+            if(splitInput.length == possibleShipsPlaceLength[i]){
+                console.log("ship check passed!");
+                console.log(possibleShipsPlaceLength);
+                gameboardPlayer.placeShip(splitInput);
+                possibleShipsPlaceLength.splice(i,1);
+                inputPlaceShip.value = '';
+                render();
+                console.log(possibleShipsPlaceLength);
+                return
+            }
         }
     }
 });
