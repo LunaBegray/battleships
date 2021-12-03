@@ -1,3 +1,22 @@
+let count;
+const body = document.querySelector("body");
+Turns = () => {
+    if(count == null){
+        count = 2;
+    } else {
+        count += 1;
+    }
+    let dividedCount = count/2
+    let whoseTurn;
+    let player = 1;
+    let computer = 2;
+    if(Number.isInteger(dividedCount) == true){
+        whoseTurn = 1;
+    } else{
+        whoseTurn = 2;
+    }
+    return whoseTurn
+}
 function Ship (length, hitYN, sunkYN, positions, positionsYN){
     this.length = length;
     this.hitYN = hitYN;
@@ -40,6 +59,7 @@ function Gameboard(){
     let ifAllShipSunkTrue = false;
     let missedShotsCord = [];
     let allSunkShips = []
+    let shipArrComp = []
     this.placeShip = (cords) => {
         let cordsYN = []
         for(let i = 0; i < cords.length; i++){
@@ -53,20 +73,32 @@ function Gameboard(){
             let whichSqI = parseInt(whichSq + i);
             let sq = document.querySelector('#playerSq' + whichSqI);
             sq.classList.add('ship');
+
         } 
     }
     //takes a pair of cords and detemines if it hits a ships, if yes it will mark it as hit. it will find the array of before the hit check and after it and then 
     //compare them, if they are equal it will add them to the array of missed shots. 
     //it also checks if all the ships has sunk, if they do it will make the var ifAllShipSunkTrue = true; 
+    
+    
+    
     this.receiveAttack = (cordsPair) => {
-        let splitInput = cordsPair.split(" ");
+        cords = cordsPair.toString();
+        splitInput = cords.split(' ');
         for(let i = 0; i < splitInput.length; i++){
             let whichSq = parseInt(splitInput[i], 10);
             let whichSqI = parseInt(whichSq + i);
-            let sq = document.querySelector('#playerSq' + whichSqI);
-            let hitCircle = document.createElement('div');
+            let sq;
+            let whoseTurn = Turns();
+            if(whoseTurn == 1){
+                sq = document.querySelector('#computerSq' + whichSqI);
+            } else {
+                sq = document.querySelector('#playerSq' + whichSqI);
+            }
+            let hitCircle = document.createElement('button');
             hitCircle.classList.add('hit');
             sq.appendChild(hitCircle);
+            sq.style.backgroundColor = 'red';
         }
         //takes ship before the hit check into array
         let beforeHitShips = []
@@ -92,20 +124,42 @@ function Gameboard(){
         if(beforeHitShips == afterHitShips){
             missedShotsCord.push(cordsPair)
         }
-
+    };
+    this.checkIfSunk = () => {
         //loops through all the ships and checks if they have been sunk, if they do, push them to the sunk ships array.
+        console.log("checks if all sunk")
         for(let i = 0; i < shipArr.length; i++){
+            console.log("loop lunched")
             if(shipArr[i].isSunk){
                 allSunkShips.push(shipArr[i]);
             }
         }
-        //if all the ships that exist are sunk then the ifAllShipSUnkTrue varaible is true.
-        if(allSunkShips == shipArr){
+            //if all the ships that exist are sunk then the ifAllShipSUnkTrue varaible is true.
+        if(allSunkShips.length == shipArr.length){
+            console.log("if statment lunched")
             ifAllShipSunkTrue = true;
+            console.log("all ships sunk!");
+              return true
         }
-        
-    };
+    /* this.placeShipComputer = (cords) => {
+      let cordsYNcomp = []
+      for(let i = 0; i < cords.length; i++){
+        cordsYNcomp.push(0);
+      }
+      let newShip = new Ship (cords.length, false, false, cords, cordsYNcomp)
+      console.log(newShip);
+      shipArrComp.push(newShip);
+
+      for(let i = 0; i < cords.length; i++){
+        let whichSq = parseInt(newShip.positions[0], 10);
+        let whichSqI = parseInt(whichSq + i);
+        let sq = document.querySelector('#computerSq' + whichSqI);
+        sq.classList.add('ship');
+      } 
+      } */
+  }
 }
+
 // la computer makes a choice
 function computerChoice(){
     let finalChoice;
@@ -118,27 +172,7 @@ function computerChoice(){
     finalChoice = num1to100
     return finalChoice
 }
-let count;
-Turns = () => {
-    if(count == null){
-        count = 2;
-    } else {
-        count += 1;
-    }
-    console.log(count + " count");
-    let dividedCount = count/2
-    let whoseTurn;
-    let player = 1;
-    let computer = 2;
-    if(Number.isInteger(dividedCount) == true){
-        console.log("player chosen");
-        whoseTurn = player;
-    } else{
-        console.log("computer chosen");
-        whoseTurn = computer;
-    }
-    return whoseTurn
-}
+
 //dom section
 //this function creates two boards for the player and the computer, both composed out of 100 squares.
 const playerCon = document.querySelector('.playerContainer');
@@ -163,19 +197,26 @@ function createBoardPaC(){
     playerCon.appendChild(playerBoard);
     computerCon.appendChild(computerBoard);
 }
-function render(){
 
-}
 const gameboardPlayer = new Gameboard();
 const gameboardComputer = new Gameboard();
 createBoardPaC();
-//btn input attack cords shit
+//btn input attack cords shit here I put the place where you enter input and it shots the enemy and the enemy shoots back
 const inputCords = document.querySelector('.cordsInput');
 const inputCordsBtn = document.querySelector('.cordsBtn');
 inputCordsBtn.addEventListener('click', () => {
     if(inputCords.value != null){
-        gameboardPlayer.receiveAttack(computerChoice());
         gameboardComputer.receiveAttack(inputCords.value);
+        gameboardPlayer.receiveAttack(computerChoice());
+        if(gameboardComputer.checkIfSunk() == true){
+            let message = document.createElement('div');
+            message.textContent = "the game has ended! all the ships sunk! you won!";
+            body.appendChild(message);
+        } else if(gameboardPlayer.checkIfSunk() == true){
+            let message = document.createElement('div');
+            message.textContent = "the game has ended! all the ships sunk! you lost!";
+            body.appendChild(message);
+        }
         inputCords.value = '';
     } 
 });
@@ -219,14 +260,9 @@ inputPlaceBtn.addEventListener('click', () => {
                 gameboardPlayer.placeShip(splitInput);
                 possibleShipsPlaceLength.splice(i,1);
                 inputPlaceShip.value = '';
-                render();
                 console.log(possibleShipsPlaceLength);
                 return
             }
         }
     }
 });
-function main(){
-    
-}
-main();
