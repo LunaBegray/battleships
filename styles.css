@@ -1,12 +1,10 @@
-.playerSq{
+.playerSq .computerSq{
     border:2px solid black;
     width: 40px;
     height: 40px;
-}
-.computerSq{
-    border:2px solid black;
-    width: 40px;
-    height: 40px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
 }
 body{
     display:flex;
@@ -26,4 +24,7 @@ body{
   flex-wrap: wrap;
   width:440px;
   height: 400px;
+}
+.ship{
+    background-color: aqua;
 }
