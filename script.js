@@ -59,7 +59,7 @@ function Gameboard(){
     //compare them, if they are equal it will add them to the array of missed shots. 
     //it also checks if all the ships has sunk, if they do it will make the var ifAllShipSunkTrue = true; 
     this.receiveAttack = (cordsPair) => {
-        let splitInput = cordsPair.split(' ');
+        let splitInput = cordsPair.split(" ");
         for(let i = 0; i < splitInput.length; i++){
             let whichSq = parseInt(splitInput[i], 10);
             let whichSqI = parseInt(whichSq + i);
