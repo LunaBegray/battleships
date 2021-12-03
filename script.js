@@ -59,6 +59,15 @@ function Gameboard(){
     //compare them, if they are equal it will add them to the array of missed shots. 
     //it also checks if all the ships has sunk, if they do it will make the var ifAllShipSunkTrue = true; 
     this.receiveAttack = (cordsPair) => {
+        let splitInput = cordsPair.split(' ');
+        for(let i = 0; i < splitInput.length; i++){
+            let whichSq = parseInt(splitInput[i], 10);
+            let whichSqI = parseInt(whichSq + i);
+            let sq = document.querySelector('#playerSq' + whichSqI);
+            let hitCircle = document.createElement('div');
+            hitCircle.classList.add('hit');
+            sq.appendChild(hitCircle);
+        }
         //takes ship before the hit check into array
         let beforeHitShips = []
         for(let i = 0; i < shipArr.length; i++){
@@ -83,8 +92,8 @@ function Gameboard(){
         if(beforeHitShips == afterHitShips){
             missedShotsCord.push(cordsPair)
         }
+
         //loops through all the ships and checks if they have been sunk, if they do, push them to the sunk ships array.
- 
         for(let i = 0; i < shipArr.length; i++){
             if(shipArr[i].isSunk){
                 allSunkShips.push(shipArr[i]);
@@ -94,7 +103,7 @@ function Gameboard(){
         if(allSunkShips == shipArr){
             ifAllShipSunkTrue = true;
         }
-
+        
     };
 }
 // la computer makes a choice
@@ -131,7 +140,7 @@ Turns = () => {
     return whoseTurn
 }
 //dom section
-//creates board
+//this function creates two boards for the player and the computer, both composed out of 100 squares.
 const playerCon = document.querySelector('.playerContainer');
 const computerCon = document.querySelector('.computerContainer');
 function createBoardPaC(){
@@ -164,13 +173,15 @@ createBoardPaC();
 const inputCords = document.querySelector('.cordsInput');
 const inputCordsBtn = document.querySelector('.cordsBtn');
 inputCordsBtn.addEventListener('click', () => {
-    if(Turns() == 1 && inputCords.value != null &&
-     ( typeof inputCords.value == Number || Array.isArray(inputCords.value) || typeof inputCords.value == Array)){
-        gameboardPlayer.receiveAttack(inputCords.value);
-        inputCords.textContent = '';
-        render();
-    }
+    if(inputCords.value != null){
+        gameboardPlayer.receiveAttack(computerChoice());
+        gameboardComputer.receiveAttack(inputCords.value);
+        inputCords.value = '';
+    } 
 });
+
+
+//checks if the ship goes from right to left and connected
 function checkGoUp(splitInput){
     let startNum = parseInt(splitInput[0], 10);
     for(let i = 0; i < splitInput.length; i++){
@@ -181,6 +192,7 @@ function checkGoUp(splitInput){
     }
     return true
 }
+//checks if the ship goes from left to right and connected
 function checkGoDown(splitInput){
     let endNum = parseInt(splitInput[splitInput.length - 1], 10);
     for(let i = 0; i < splitInput.length; i++){
@@ -191,7 +203,9 @@ function checkGoDown(splitInput){
     }
     return true
 }
-//btn input placeship shit
+//btn input placeship shit.
+//it can take a set of numbers with spaces then split them into an array. then it checks if it its not some random number,
+//but the ships are connected, if they are connected, it will create a new ship and will display it.
 const inputPlaceShip = document.querySelector('.placeShipInput');
 const inputPlaceBtn = document.querySelector('.placeShipBtn');
 let possibleShipsPlaceLength = [1,1,1,2,2,3];
