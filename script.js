@@ -34,11 +34,13 @@ function Ship (length, hitYN, sunkYN, positions, positionsYN){
     }
 }
 //creates the board
+
 function Gameboard(){
     //places ship in cords specified when calling the function, it does not prevent the ship from begin places on another ship.
     let shipArr = [];
     let ifAllShipSunkTrue = false;
     let missedShotsCord = [];
+    let allSunkShips = []
     this.placeShip = (cords) => {
         let cordsYN = []
         for(let i = 0; i < cords.length; i++){
@@ -76,7 +78,7 @@ function Gameboard(){
             missedShotsCord.push(cordsPair)
         }
         //loops through all the ships and checks if they have been sunk, if they do, push them to the sunk ships array.
-        let allSunkShips = []
+ 
         for(let i = 0; i < shipArr.length; i++){
             if(shipArr[i].isSunk){
                 allSunkShips.push(shipArr[i]);
@@ -86,6 +88,7 @@ function Gameboard(){
         if(allSunkShips == shipArr){
             ifAllShipSunkTrue = true;
         }
+
     };
 }
 // la computer makes a choice
@@ -100,3 +103,82 @@ function computerChoice(){
     finalChoice = num1to100
     return finalChoice
 }
+let count;
+Turns = () => {
+    if(count == null){
+        count = 2;
+    } else {
+        count += 1;
+    }
+    console.log(count + " count");
+    let dividedCount = count/2
+    let whoseTurn;
+    let player = 1;
+    let computer = 2;
+    if(Number.isInteger(dividedCount) == true){
+        console.log("player chosen");
+        whoseTurn = player;
+    } else{
+        console.log("computer chosen");
+        whoseTurn = computer;
+    }
+    return whoseTurn
+}
+//dom section
+//creates board
+const playerCon = document.querySelector('.playerContainer');
+const computerCon = document.querySelector('.computerContainer');
+function createBoardPaC(){
+    const playerBoard = document.createElement('div');
+    const computerBoard = document.createElement('div');
+    playerBoard.classList.add("playerBoard");
+    computerBoard.classList.add("computerBoard");
+    for(let i = 0; i < 100; i++){
+        let newSqP = document.createElement('div');
+        newSqP.classList.add('playerSq');
+        const idForSqP = "playerSq" + i;
+        newSqP.id = idForSqP;
+        playerBoard.appendChild(newSqP);
+        let newSqC = document.createElement('div');
+        newSqC.classList.add("computerSq");
+        const idForSqC = "computerSq" + i;
+        newSqC.id = idForSqC;
+        computerBoard.appendChild(newSqC);
+    }
+    playerCon.appendChild(playerBoard);
+    computerCon.appendChild(computerBoard);
+}
+function render(){
+
+}
+const gameboardPlayer = new Gameboard();
+const gameboardComputer = new Gameboard();
+createBoardPaC();
+//btn input attack cords shit
+const inputCords = document.querySelector('.cordsInput');
+const inputCordsBtn = document.querySelector('.cordsBtn');
+inputCordsBtn.addEventListener('click', () => {
+    if(Turns() == 1 && inputCords.value != null &&
+     ( typeof inputCords.value == Number || Array.isArray(inputCords.value) || typeof inputCords.value == Array)){
+        gameboardPlayer.receiveAttack(inputCords.value);
+        inputCords.textContent = '';
+        render();
+    }
+});
+//btn input placeship shit
+const inputPlaceShip = document.querySelector('.placeShipInput');
+const inputPlaceBtn = document.querySelector('.placeShipBtn');
+let possibleShipsPlaceLength = [1,1,1,2,2,3];
+inputPlaceBtn.addEventListener('click', () => {
+    for(let i = 0; i < possibleShipsPlaceLength.length; i++){
+        if(gameboardPlayer.shipArr.length < 6 && inputPlaceShip.value.length == possibleShipsPlaceLength[i]){
+            gameboardPlayer.placeShip(inputPlaceShip.value);
+            inputPlaceShip.textContent = '';
+            render();
+        }
+    }
+});
+function main(){
+    
+}
+main();
