@@ -59,8 +59,17 @@ function Ship (length, hitYN, sunkYN, positions, positionsYN){
     this.positionsYN =  positionsYN;
     //takes cords as a number and if the cords match this ship it marks it as hit in the positionYN array
     this.hit = (num) => {
-        for(let i = 0; i < this.positions.length; i++){
-            if(num == this.positions[i]){
+        let valueArr = [];
+        for(let i = 0; i < this.positionsYN.length; i++){
+            if(typeof this.positions != 'number'){
+                valueArr = this.positions;
+            }
+            if(typeof this.positions == 'number'){
+                valueArr.push(this.positions);
+            }
+        }
+        for(let i = 0; i < this.length; i++){
+            if(num == valueArr[i]){
                 this.positionsYN[i] = 1;
                 this.hitYN = true;
             }
@@ -73,11 +82,12 @@ function Ship (length, hitYN, sunkYN, positions, positionsYN){
         let hittedPositions = [];
         for(let i = 0; i < this.positionsYN.length; i++){
             if(this.positionsYN[i] == 1){
-                hittedPositions.push(this.positions[i]);
+                console.log(this.positions + " is sunk");
+                hittedPositions.push(this.positions);
             }
         }
+        console.log("hitted positions: " + hittedPositions.length);
         if(hittedPositions.length == this.positions.length){
-            hittedPositions = [];
             this.sunkYN = true;
             return true
         }
@@ -114,12 +124,18 @@ function Gameboard(){
     this.placeShipComputer = () => {
       let choices = createShipCords();
       for(let i = 0; i < choices.length; i++){
-           let cordsYNcomp = [];
-           for(let j = 0; j < choices[i].length; j++){
-             cordsYNcomp.push(0)
-           }
-           let newShip = new Ship (choices[i].length, false, false, choices[i], cordsYNcomp);
-           shipArrComp.push(newShip);
+            let lengthArr = [];
+            let cordsYNcomp = [];
+            if(typeof choices[i] == 'number'){
+                lengthArr.push(choices[i]);
+            } else {
+                lengthArr = choices[i];
+            }
+            for(let j = 0; j < lengthArr.length; j++){
+                cordsYNcomp.push(0)
+            }
+            let newShip = new Ship (lengthArr.length, false, false, choices[i], cordsYNcomp);
+            shipArrComp.push(newShip);
       }
       console.log(shipArrComp);
     } 
@@ -169,11 +185,11 @@ function Gameboard(){
             console.log("shipArr.length: " + shipArr.length);
             //loops through all the ships and checks if they have been sunk, if they do, push them to the sunk ships array.
             for(let i = 0; i < shipArr.length; i++){
-                if(shipArr[i].isSunk == true){
+                if(shipArr[i].isSunk() == true){
                     allSunkShips.push(1);
                 }
             }
-            console.log("allSunkShips.legnth: " + allSunkShips.length);
+            console.log("allSunkShips.length: " + allSunkShips.length);
                 //if all the ships that exist are sunk then the ifAllShipSUnkTrue varaible is true.
             if(allSunkShips.length == shipArr.length){
                 ifAllShipSunkTrue = true;
@@ -183,7 +199,8 @@ function Gameboard(){
         if(turn == 2){
             console.log("shipArrComp.length: " + shipArrComp.length);
             for(let i = 0; i < shipArrComp.length; i++){
-                if(shipArrComp[i].isSunk == true){
+                if(shipArrComp[i].isSunk() == true){
+                    console.log("if statement lunched - ship is sunk");
                     allSunkShipsComp.push(1);
                 }
             }
