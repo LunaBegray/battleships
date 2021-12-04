@@ -1,3 +1,38 @@
+function createShipCords(){
+    let finalChoice = [];
+    let choicesPoss = []
+    for(let i = 0; i < 100; i++){
+        choicesPoss.push(i);
+    }
+    for(let i = 0; i < 3; i++){
+        let num1to100 = Math.floor(Math.random()*choicesPoss.length)
+        finalChoice.push(num1to100);
+        choicesPoss.splice(num1to100,1);
+    }
+    for(let i = 0; i < 2; i++){
+      let store2 = [];
+      let num1to100 = Math.floor(Math.random()*choicesPoss.length)
+      store2.push(num1to100);
+      choicesPoss.splice(num1to100,1);
+      store2.push(num1to100 + 1);
+      choicesPoss.splice(num1to100+1, 1);
+      finalChoice.push(store2);
+    }
+      for(let i = 0; i < 1; i++){
+        let store3 = [];
+        let num1to100 = Math.floor(Math.random()*choicesPoss.length)
+        store3.push(num1to100);
+        choicesPoss.splice(num1to100,1);
+        store3.push(num1to100 + 1);
+        choicesPoss.splice(num1to100+1, 1);
+        store3.push(num1to100 + 2);
+        choicesPoss.splice(num1to100+2, 1)
+        finalChoice.push(store3);
+    }
+    console.log(finalChoice);
+    return finalChoice
+}
+
 let count;
 const body = document.querySelector("body");
 Turns = () => {
@@ -76,12 +111,24 @@ function Gameboard(){
 
         } 
     }
+    
+    this.placeShipComputer = () => {
+      let choices = createShipCords();
+      for(let i = 0; i < choices.length; i++){
+           let cordsYNcomp = [];
+           for(let j = 0; j < choices[i].length; j++){
+             cordsYNcomp.push(0)
+           }
+           let newShip = new Ship (choices[i].length, false, false, choices[i], cordsYNcomp);
+           shipArrComp.push(newShip);
+      }
+      console.log(shipArrComp);
+    } 
+    
+    
     //takes a pair of cords and detemines if it hits a ships, if yes it will mark it as hit. it will find the array of before the hit check and after it and then 
     //compare them, if they are equal it will add them to the array of missed shots. 
     //it also checks if all the ships has sunk, if they do it will make the var ifAllShipSunkTrue = true; 
-    
-    
-    
     this.receiveAttack = (cordsPair) => {
         cords = cordsPair.toString();
         splitInput = cords.split(' ');
@@ -141,22 +188,7 @@ function Gameboard(){
             console.log("all ships sunk!");
               return true
         }
-    /* this.placeShipComputer = (cords) => {
-      let cordsYNcomp = []
-      for(let i = 0; i < cords.length; i++){
-        cordsYNcomp.push(0);
-      }
-      let newShip = new Ship (cords.length, false, false, cords, cordsYNcomp)
-      console.log(newShip);
-      shipArrComp.push(newShip);
 
-      for(let i = 0; i < cords.length; i++){
-        let whichSq = parseInt(newShip.positions[0], 10);
-        let whichSqI = parseInt(whichSq + i);
-        let sq = document.querySelector('#computerSq' + whichSqI);
-        sq.classList.add('ship');
-      } 
-      } */
   }
 }
 
@@ -200,6 +232,7 @@ function createBoardPaC(){
 
 const gameboardPlayer = new Gameboard();
 const gameboardComputer = new Gameboard();
+gameboardComputer.placeShipComputer();
 createBoardPaC();
 //btn input attack cords shit here I put the place where you enter input and it shots the enemy and the enemy shoots back
 const inputCords = document.querySelector('.cordsInput');
@@ -266,3 +299,29 @@ inputPlaceBtn.addEventListener('click', () => {
         }
     }
 });
+
+/*
+let shipArrComp = [];
+//creates invisible ships for the computer lol epiclly trolled 
+function placeShipsComp(cordsPair){
+      let cords = cordsPair.toString();
+      let splitCords = cords.split(' ');
+      let cordsYNcomp = [];
+      for(let i = 0; i < splitCords.length; i++){
+        console.log("for loops starts")
+        cordsYNcomp.push(0);
+      }
+      let newShip = new Ship (splitCords.length, false, false, splitCords , cordsYNcomp)
+      console.log(newShip);
+      shipArrComp.push(newShip);
+
+      for(let i = 0; i < cords.length; i++){
+        let whichSq = parseInt(newShip.positions[0], 10);
+        let whichSqI = parseInt(whichSq + i);
+        let sq = document.querySelector('#computerSq' + whichSqI);
+        sq.classList.add('ship');
+      } 
+   }
+placeShipsComp(36, 37, 38);
+placeShipsComp(12);
+*/
