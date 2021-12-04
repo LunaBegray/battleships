@@ -128,7 +128,7 @@ function Gameboard(){
     //takes a pair of cords and detemines if it hits a ships, if yes it will mark it as hit. it will find the array of before the hit check and after it and then 
     //compare them, if they are equal it will add them to the array of missed shots. 
     //it also checks if all the ships has sunk, if they do it will make the var ifAllShipSunkTrue = true; 
-    this.receiveAttack = (cordsPair) => {
+    this.receiveAttack = (cordsPair, turn) => {
         cords = cordsPair.toString();
         splitInput = cords.split(' ');
         for(let i = 0; i < splitInput.length; i++){
@@ -146,29 +146,20 @@ function Gameboard(){
             sq.appendChild(hitCircle);
             sq.style.backgroundColor = 'red';
         }
-        //takes ship before the hit check into array
-        let beforeHitShips = []
-        for(let i = 0; i < shipArr.length; i++){
-            if(shipArr[i].hitYN){
-                beforeHitShips.push(1)
-            }
-        }
         //hit check, if it does hit then call the hit function of the ship that has been hit.
-        for(let i = 0; i < shipArr.length; i++){
-            if(shipArr[i].positions == cordsPair){
-                shipArr[i].hit(cordsPair);
-            }
-        } 
-        //take ship after the hit check into array
-        let afterHitShips = []
-        for(let i = 0; i < shipArr.length; i++){
-            if(shipArr[i].hitYN){
-                afterHitShips.push(1)
-            }
+        if(turn == 1){
+            for(let i = 0; i < shipArr.length; i++){
+                if(shipArr[i].positions == cordsPair){
+                    shipArr[i].hit(cordsPair);
+                }
+            } 
         }
-        //if hit ship array is the same before and after check it will deteramine that the shot was missed and add it to the missed shots array
-        if(beforeHitShips == afterHitShips){
-            missedShotsCord.push(cordsPair)
+        if(turn == 2){
+            for(let i = 0; i < shipArrComp.length; i++){
+                if(shipArrComp[i].positions == cordsPair){
+                    shipArrComp[i].hit(cordsPair);
+                }
+            }
         }
     };
     //checks if all ships are sunk in either side
@@ -253,8 +244,8 @@ const inputCords = document.querySelector('.cordsInput');
 const inputCordsBtn = document.querySelector('.cordsBtn');
 inputCordsBtn.addEventListener('click', () => {
     if(inputCords.value != null){
-        gameboardComputer.receiveAttack(inputCords.value);
-        gameboardPlayer.receiveAttack(computerChoice());
+        gameboardComputer.receiveAttack(inputCords.value, 2);
+        gameboardPlayer.receiveAttack(computerChoice(), 1);
         if(gameboardComputer.checkIfSunk(2) == true){
             let message = document.createElement('div');
             message.textContent = "the game has ended! all the ships sunk! you won!";
