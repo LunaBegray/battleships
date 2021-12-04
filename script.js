@@ -59,7 +59,7 @@ function Ship (length, hitYN, sunkYN, positions, positionsYN){
     this.positionsYN =  positionsYN;
     //takes cords as a number and if the cords match this ship it marks it as hit in the positionYN array
     this.hit = (num) => {
-        for(let i = 0; i < this.positionst.length; i++){
+        for(let i = 0; i < this.positions.length; i++){
             if(num == this.positions[i]){
                 this.positionsYN[i] = 1;
                 this.hitYN = true;
