@@ -86,10 +86,20 @@ function Ship (length, hitYN, sunkYN, positions, positionsYN){
                 hittedPositions.push(this.positions);
             }
         }
+        let lengthPos = [];
+        for(let i = 0; i < this.positionsYN.length; i++){
+            if(typeof this.positions != 'number'){
+                lengthPos = this.positions;
+            }
+            if(typeof this.positions == 'number'){
+                lengthPos.push(this.positions);
+            }
+        }
         console.log("hitted positions: " + hittedPositions.length);
-        if(hittedPositions.length == this.positions.length){
+        console.log("this.positions.length: " + lengthPos.length);
+        if(hittedPositions.length == lengthPos.length){
             this.sunkYN = true;
-            return true
+                return true
         }
         hittedPositions = [];
         this.sunkYN = false;
@@ -206,7 +216,7 @@ function Gameboard(){
             }
             console.log("allSunkShipsComp.length: " + allSunkShipsComp.length);
             //if all the ships that exist are sunk then the ifAllShipSUnkTrue varaible is true.
-            if(allSunkShipsComp.length == shipArrComp.length){
+            if(allSunkShipsComp.length-21 == shipArrComp.length){
                 ifAllShipSunkTrue = true;
                   return true
             }
