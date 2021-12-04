@@ -29,7 +29,6 @@ function createShipCords(){
         choicesPoss.splice(num1to100+2, 1)
         finalChoice.push(store3);
     }
-    console.log(finalChoice);
     return finalChoice
 }
 
@@ -93,15 +92,15 @@ function Gameboard(){
     let shipArr = [];
     let ifAllShipSunkTrue = false;
     let missedShotsCord = [];
-    let allSunkShips = []
-    let shipArrComp = []
+    let allSunkShips = [];
+    let allSunkShipsComp = [];
+    let shipArrComp = [];
     this.placeShip = (cords) => {
         let cordsYN = []
         for(let i = 0; i < cords.length; i++){
             cordsYN.push(0);
         }
         let newShip = new Ship (cords.length, false, false, cords, cordsYN)
-        console.log(newShip);
         shipArr.push(newShip);
         for(let i = 0; i < cords.length; i++){
             let whichSq = parseInt(newShip.positions[0], 10);
@@ -172,23 +171,38 @@ function Gameboard(){
             missedShotsCord.push(cordsPair)
         }
     };
-    this.checkIfSunk = () => {
-        //loops through all the ships and checks if they have been sunk, if they do, push them to the sunk ships array.
-        console.log("checks if all sunk")
-        for(let i = 0; i < shipArr.length; i++){
-            console.log("loop lunched")
-            if(shipArr[i].isSunk){
-                allSunkShips.push(shipArr[i]);
+    //checks if all ships are sunk in either side
+    this.checkIfSunk = (turn) => {
+        console.log("which turn: " + turn);
+        if(turn == 1){
+            console.log("shipArr.length: " + shipArr.length);
+            //loops through all the ships and checks if they have been sunk, if they do, push them to the sunk ships array.
+            for(let i = 0; i < shipArr.length; i++){
+                if(shipArr[i].isSunk == true){
+                    allSunkShips.push(1);
+                }
+            }
+            console.log("allSunkShips.legnth: " + allSunkShips.length);
+                //if all the ships that exist are sunk then the ifAllShipSUnkTrue varaible is true.
+            if(allSunkShips.length == shipArr.length){
+                ifAllShipSunkTrue = true;
+                return true
             }
         }
+        if(turn == 2){
+            console.log("shipArrComp.length: " + shipArrComp.length);
+            for(let i = 0; i < shipArrComp.length; i++){
+                if(shipArrComp[i].isSunk == true){
+                    allSunkShipsComp.push(1);
+                }
+            }
+            console.log("allSunkShipsComp.length: " + allSunkShipsComp.length);
             //if all the ships that exist are sunk then the ifAllShipSUnkTrue varaible is true.
-        if(allSunkShips.length == shipArr.length){
-            console.log("if statment lunched")
-            ifAllShipSunkTrue = true;
-            console.log("all ships sunk!");
-              return true
+            if(allSunkShipsComp.length == shipArrComp.length){
+                ifAllShipSunkTrue = true;
+                  return true
+            }
         }
-
   }
 }
 
@@ -241,11 +255,12 @@ inputCordsBtn.addEventListener('click', () => {
     if(inputCords.value != null){
         gameboardComputer.receiveAttack(inputCords.value);
         gameboardPlayer.receiveAttack(computerChoice());
-        if(gameboardComputer.checkIfSunk() == true){
+        if(gameboardComputer.checkIfSunk(2) == true){
             let message = document.createElement('div');
             message.textContent = "the game has ended! all the ships sunk! you won!";
             body.appendChild(message);
-        } else if(gameboardPlayer.checkIfSunk() == true){
+        } 
+        if(gameboardPlayer.checkIfSunk(1) == true){
             let message = document.createElement('div');
             message.textContent = "the game has ended! all the ships sunk! you lost!";
             body.appendChild(message);
@@ -288,12 +303,9 @@ inputPlaceBtn.addEventListener('click', () => {
     if(checkGoUp(splitInput) || checkGoDown(splitInput)){
         for(let i = 0; i < possibleShipsPlaceLength.length; i++){
             if(splitInput.length == possibleShipsPlaceLength[i]){
-                console.log("ship check passed!");
-                console.log(possibleShipsPlaceLength);
                 gameboardPlayer.placeShip(splitInput);
                 possibleShipsPlaceLength.splice(i,1);
                 inputPlaceShip.value = '';
-                console.log(possibleShipsPlaceLength);
                 return
             }
         }
