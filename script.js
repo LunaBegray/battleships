@@ -95,8 +95,6 @@ function Ship (length, hitYN, sunkYN, positions, positionsYN){
                 lengthPos.push(this.positions);
             }
         }
-        console.log("hitted positions: " + hittedPositions.length);
-        console.log("this.positions.length: " + lengthPos.length);
         if(hittedPositions.length == lengthPos.length){
             this.sunkYN = true;
                 return true
@@ -190,7 +188,6 @@ function Gameboard(){
     };
     //checks if all ships are sunk in either side
     this.checkIfSunk = (turn) => {
-        console.log("which turn: " + turn);
         if(turn == 1){
             console.log("shipArr.length: " + shipArr.length);
             //loops through all the ships and checks if they have been sunk, if they do, push them to the sunk ships array.
@@ -207,14 +204,11 @@ function Gameboard(){
             }
         }
         if(turn == 2){
-            console.log("shipArrComp.length: " + shipArrComp.length);
             for(let i = 0; i < shipArrComp.length; i++){
                 if(shipArrComp[i].isSunk() == true){
-                    console.log("if statement lunched - ship is sunk");
                     allSunkShipsComp.push(1);
                 }
             }
-            console.log("allSunkShipsComp.length: " + allSunkShipsComp.length);
             //if all the ships that exist are sunk then the ifAllShipSUnkTrue varaible is true.
             if(allSunkShipsComp.length-21 == shipArrComp.length){
                 ifAllShipSunkTrue = true;
